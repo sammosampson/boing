@@ -8,7 +8,7 @@ pub fn render_first_animation_frame(
     animation: &Animation,
     buffer: &mut CommandBuffer
 ) {
-    //ln!("animating first frame {:?}", entity_id);
+    println!("animating first frame {:?}", entity_id);
     let frame_texture = animation.get_frame_texture(0);
     set_texture(buffer, *entity, frame_texture);
 }

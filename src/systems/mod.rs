@@ -13,8 +13,9 @@ mod screens;
 pub use legion::*;
 pub use legion::query::Query;
 pub use legion::systems::CommandBuffer;
-use legion::systems::ParallelRunnable;
 pub use legion::world::SubWorld;
+
+use legion::systems::ParallelRunnable;
 
 pub fn build_world() -> World {
     let world = World::default();
