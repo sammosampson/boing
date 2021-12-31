@@ -27,6 +27,7 @@ pub fn build_start_schedule() -> Schedule {
         .add_system(state::transition_state_to_starting_system())
         .add_system(events::proliferate_system_events_system())
         .flush()
+        .add_system(time::calculate_elapsed_time_system())
         .add_thread_local(rendering::build_play_render_graph_system())
         .add_system(screens::menu_screen_input_system())
         .add_system(screens::set_menu_screen_texture_system())
@@ -43,26 +44,30 @@ pub fn build_start_schedule() -> Schedule {
 }
 
 pub fn build_one_player_play_schedule() -> Schedule {
-    build_play_schedule(movement::calculate_computer_player_two_heading_system())
+    build_play_schedule(movement::calculate_computer_player_two_direction_system())
 }
 
 pub fn build_two_player_play_schedule() -> Schedule {
-    build_play_schedule(movement::set_player_two_heading_from_input_system())
+    build_play_schedule(movement::set_player_two_direction_from_input_system())
 }
 
 fn build_play_schedule<T: 'static + ParallelRunnable>(player_two_control_system: T) -> Schedule {
     Schedule::builder()
         .add_system(state::transition_state_to_playing_system())
+        .flush()
         .add_system(events::proliferate_system_events_system())
         .add_system(movement::initialise_movement_system())
         .flush()
         .add_system(time::calculate_elapsed_time_system())
         .add_thread_local(rendering::build_play_render_graph_system())
-        .add_system(movement::set_player_one_heading_from_input_system())
+        .add_system(movement::set_player_one_direction_from_input_system())
         .add_system(player_two_control_system)
+        .flush()
+        .add_system(movement::play_bat_movement_sounds_system())
+        .add_system(movement::set_bat_heading_from_direction_system())
+        .add_system(movement::reset_bat_heading_with_no_direction_system())
         .add_system(collision::contain_bat_in_bounds_system())
         .add_system(movement::set_velocity_given_heading_system())
-        .add_system(movement::set_bat_movement_sounds_system())
         .add_system(movement::apply_velocity_to_position_system())
         .add_system(collision::check_collision_system())
         .flush()
@@ -86,18 +91,29 @@ fn build_play_schedule<T: 'static + ParallelRunnable>(player_two_control_system:
         .build()
 }
 
-pub fn build_score_schedule() -> Schedule {
+pub fn build_one_player_score_schedule() -> Schedule {
+    build_score_schedule(movement::calculate_computer_player_two_direction_system())
+}
+
+pub fn build_two_player_score_schedule() -> Schedule {
+    build_score_schedule(movement::set_player_two_direction_from_input_system())
+}
+
+pub fn build_score_schedule<T: 'static + ParallelRunnable>(player_two_control_system: T) -> Schedule {
     Schedule::builder()
         .add_system(state::transition_state_to_scored_system())
         .add_system(events::proliferate_system_events_system())
         .flush()
         .add_system(time::calculate_elapsed_time_system())
         .add_thread_local(rendering::build_play_render_graph_system())
-        .add_system(movement::set_player_one_heading_from_input_system())
-        .add_system(movement::set_player_two_heading_from_input_system())
+        .add_system(movement::set_player_one_direction_from_input_system())
+        .add_system(player_two_control_system)
+        .flush()
+        .add_system(movement::play_bat_movement_sounds_system())
+        .add_system(movement::set_bat_heading_from_direction_system())
+        .add_system(movement::reset_bat_heading_with_no_direction_system())
         .add_system(collision::contain_bat_in_bounds_system())
         .add_system(movement::set_velocity_given_heading_system())
-        .add_system(movement::set_bat_movement_sounds_system())
         .add_system(movement::apply_velocity_to_position_system())
         .flush()
         .add_thread_local(movement::set_position_system())

@@ -8,7 +8,7 @@ pub fn set_position(
     #[resource] item_renderer: &mut ItemRenderer
 ) {
     if let Some(item) = item_renderer.find_mut(entity_id) {
-        item.set_centre_position(**position);
+        item.set_centre_position(**next_position);
         **position = **next_position
     }
 }

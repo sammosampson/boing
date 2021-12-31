@@ -11,7 +11,8 @@ pub struct Application {
     start_schedule: Schedule,
     one_player_play_schedule: Schedule,
     two_player_play_schedule: Schedule,
-    score_schedule: Schedule,
+    one_player_score_schedule: Schedule,
+    two_player_score_schedule: Schedule,
     finish_schedule: Schedule,
     event_loop: SystemEventLoop
 }
@@ -24,7 +25,8 @@ impl Application {
         let start_schedule = build_start_schedule();
         let one_player_play_schedule = build_one_player_play_schedule();
         let two_player_play_schedule = build_two_player_play_schedule();
-        let score_schedule = build_score_schedule();
+        let one_player_score_schedule = build_one_player_score_schedule();
+        let two_player_score_schedule = build_two_player_score_schedule();
         let finish_schedule = build_finish_schedule();
        
         let application = Self {
@@ -33,7 +35,8 @@ impl Application {
             start_schedule,
             one_player_play_schedule,
             two_player_play_schedule,
-            score_schedule,
+            one_player_score_schedule,
+            two_player_score_schedule,
             finish_schedule,
             event_loop
         };
@@ -74,7 +77,12 @@ impl Application {
                     GameStyle::TwoPlayer => self.two_player_play_schedule.execute(&mut self.world, &mut self.resources),
                 }
             },
-            GameStatus::Scoring(_) => self.score_schedule.execute(&mut self.world, &mut self.resources),
+            GameStatus::Scoring(_) =>  {
+                match current_game_style {
+                    GameStyle::OnePlayer => self.one_player_score_schedule.execute(&mut self.world, &mut self.resources),
+                    GameStyle::TwoPlayer => self.two_player_score_schedule.execute(&mut self.world, &mut self.resources),
+                }
+            },
             GameStatus::Finishing => self.finish_schedule.execute(&mut self.world, &mut self.resources),
             GameStatus::Exiting => return false
         };

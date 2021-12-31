@@ -9,6 +9,6 @@ pub fn initialise_movement(
     position: &Position,
     buffer: &mut CommandBuffer
 ) {
-    buffer.add_component(*entity, NextPosition(position.0));
+    buffer.add_component(*entity, NextPosition(**position));
     buffer.add_component(*entity, Velocity::default());
 }

@@ -6,6 +6,7 @@ pub fn proliferate_system_events(
     buffer: &mut CommandBuffer,
 ) {
     for event in event_channel.read_events() {
+        println!("proliferating {:?}", event);
         buffer.push((*event, ));
     }
 }

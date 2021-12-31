@@ -6,6 +6,7 @@ use crate::prelude::*;
 pub fn transition_state_to_playing(
     #[resource] game_state: &mut GameState,
     #[resource] game_timer: &mut GameTimer,
+    #[resource] game_style: &GameStyle,
     #[resource] score: &mut PlayerScore,
     buffer: &mut CommandBuffer,
     world: &SubWorld
@@ -22,6 +23,7 @@ pub fn transition_state_to_playing(
         },
         GameStatus::Starting => {
             remove_menu_screen(buffer, world);
+            set_player_game_style(buffer, world, *game_style);
             add_ball(buffer);
         },
         GameStatus::Finishing => {
@@ -42,6 +44,16 @@ fn remove_menu_screen(buffer: &mut CommandBuffer, world: &SubWorld) {
         .iter(world)
         .for_each(|entity| {
             remove_entity(buffer, *entity);
+        });
+}
+
+fn set_player_game_style(buffer: &mut CommandBuffer, world: &SubWorld, game_style: GameStyle) {
+    <(Entity, &Bat)>::query()
+        .iter(world)
+        .for_each(|(entity, bat)| {
+            if **bat == PlayerIndex::Player2 && game_style == GameStyle::OnePlayer {
+                buffer.remove_component::<Player>(*entity);
+            }
         });
 }
 

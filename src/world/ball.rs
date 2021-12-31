@@ -17,7 +17,7 @@ pub fn add_ball(buffer: &mut CommandBuffer) {
         Layer(2), 
         Position(centre_screen()), 
         MaximumVelocity(BASE_BALL_VELOCITY),
-        Heading(Angle::from_degrees(135.0).into()),
+        Heading::from(Vector::from(Angle::from_degrees(135.0))),
         WorldEntityId::from("Ball")
     ));
 }

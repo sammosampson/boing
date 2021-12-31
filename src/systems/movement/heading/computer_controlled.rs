@@ -6,33 +6,35 @@ const TARGET_POSITION_THRESHOLD: f32 = 10.0;
 #[read_component(Bat)]
 #[read_component(Ball)]
 #[read_component(Position)]
-#[write_component(Heading)]
-pub fn calculate_computer_player_two_heading(
+#[read_component(Heading)]
+#[write_component(Direction)]
+pub fn calculate_computer_player_two_direction(
     world: &SubWorld,
     buffer: &mut CommandBuffer
 ) {
     let (bat_entity, bat_position) = get_bat(world);
-    let (ball_position, ball_heading) = get_ball_position(world);
-    
+
     let target_y_1 = HALF_SCREEN_HEIGHT;
     let mut target_y = target_y_1;
 
-    if ball_heading.x > 0.0 {
-        let target_y_2 = ball_position.y;
+    if let Some((ball_position, ball_heading)) = get_ball_position(world) {
+        if ball_heading.x > 0.0 {
+            let target_y_2 = ball_position.y;
 
-        let x_distance = (ball_position.x - bat_position.x).abs();
-        let weight_1 = min_float(1.0, x_distance / HALF_SCREEN_WIDTH);
-        let weight_2 = 1.0 - weight_1;
+            let x_distance = (ball_position.x - bat_position.x).abs();
+            let weight_1 = min_float(1.0, x_distance / HALF_SCREEN_WIDTH);
+            let weight_2 = 1.0 - weight_1;
 
-        target_y = (weight_1 * target_y_1) + (weight_2 * target_y_2);
+            target_y = (weight_1 * target_y_1) + (weight_2 * target_y_2);
+        }
     }
     
     if bat_position.y < target_y - TARGET_POSITION_THRESHOLD {
-        buffer.add_component(bat_entity, Heading(Vector::up()))
+        buffer.add_component(bat_entity, Direction::Up)
     } else if bat_position.y > target_y + TARGET_POSITION_THRESHOLD {
-        buffer.add_component(bat_entity, Heading(Vector::down()))
+        buffer.add_component(bat_entity, Direction::Down)
     } else {
-        buffer.add_component(bat_entity, Heading(Vector::default()))
+        buffer.remove_component::<Direction>(bat_entity)
     }
 }
 
@@ -45,13 +47,12 @@ fn get_bat(world: &SubWorld) -> (Entity, Vector) {
         .expect("No bat found")       
 }
 
-fn get_ball_position(world: &SubWorld) -> (Vector, Vector) {
+fn get_ball_position(world: &SubWorld) -> Option<(Vector, Vector)> {
     <(&Position, &Heading)>::query()
         .filter(component::<Ball>())
         .iter(world)
         .map(|(position, heading)| (**position, **heading))
         .nth(0)
-        .expect("No ball found")
 }
 
 fn min_float(first: f32, second: f32) -> f32 {

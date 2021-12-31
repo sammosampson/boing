@@ -90,6 +90,7 @@ fn add_bat(buffer: &mut CommandBuffer, index: PlayerIndex, texture: TextureResou
         Position(Vector::new(x, HALF_SCREEN_HEIGHT)), 
         MaximumVelocity(MAXIMUM_BAT_VELOCITY),
         Heading::default(),
-        WorldEntityId::from(name)
+        WorldEntityId::from(name),
+        Player
     ));
 }

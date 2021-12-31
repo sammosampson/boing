@@ -1,6 +1,11 @@
 use crate::prelude::*;
 
 #[derive(Debug, Copy, Clone)]
+pub enum Direction {
+    Up,
+    Down
+}
+#[derive(Debug, Copy, Clone)]
 pub struct Position(pub Vector);
 
 impl Deref for Position {
@@ -69,7 +74,7 @@ impl DerefMut for MaximumVelocity {
 }
 
 #[derive(Default, Debug, Copy, Clone)]
-pub struct Heading(pub Vector);
+pub struct Heading(Vector);
 
 impl Deref for Heading {
     type Target = Vector;
@@ -85,3 +90,8 @@ impl DerefMut for Heading {
     }
 }
 
+impl From<Vector> for Heading {
+    fn from(from: Vector) -> Self {
+        Self(from)
+    }
+}
