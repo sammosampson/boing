@@ -6,7 +6,7 @@ mod time;
 mod collision;
 mod animation;
 mod effects;
-mod sound;
+mod audio;
 mod world;
 mod screens;
 
@@ -32,7 +32,8 @@ pub fn build_start_schedule() -> Schedule {
         .add_system(screens::set_menu_screen_texture_system())
         .flush()
         .add_thread_local(rendering::render_system())
-        .add_system(sound::play_sound_system())
+        .add_system(audio::play_music_system())
+        .add_system(audio::play_sound_system())
         .add_thread_local(effects::remove_dead_effects_system())
         .flush()
         .add_thread_local(world::remove_entity_system())
@@ -75,7 +76,8 @@ fn build_play_schedule<T: 'static + ParallelRunnable>(player_two_control_system:
         .add_thread_local(animation::render_animation_frame_system())
         .flush()
         .add_thread_local(rendering::render_system())
-        .add_system(sound::play_sound_system())
+        .add_system(audio::play_music_system())
+        .add_system(audio::play_sound_system())
         .add_thread_local(effects::remove_dead_effects_system())
         .flush()
         .add_thread_local(world::remove_entity_system())
@@ -104,7 +106,8 @@ pub fn build_score_schedule() -> Schedule {
         .add_thread_local(animation::render_animation_frame_system())
         .flush()
         .add_thread_local(rendering::render_system())
-        .add_system(sound::play_sound_system())
+        .add_system(audio::play_music_system())
+        .add_system(audio::play_sound_system())
         .flush()
         .add_thread_local(world::remove_entity_system())
         .add_system(state::exit_if_requested_system())
@@ -121,7 +124,8 @@ pub fn build_finish_schedule() -> Schedule {
         .add_system(screens::game_over_screen_input_system())
         .flush()
         .add_thread_local(rendering::render_system())
-        .add_system(sound::play_sound_system())
+        .add_system(audio::play_music_system())
+        .add_system(audio::play_sound_system())
         .flush()
         .add_thread_local(effects::remove_dead_effects_system())
         .flush()

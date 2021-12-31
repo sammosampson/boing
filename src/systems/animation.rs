@@ -8,7 +8,7 @@ pub fn render_first_animation_frame(
     animation: &Animation,
     buffer: &mut CommandBuffer
 ) {
-    println!("animating first frame {:?}", entity_id);
+    //println!("animating first frame {:?}", entity_id);
     let frame_texture = animation.get_frame_texture(0);
     set_texture(buffer, *entity, frame_texture);
 }
@@ -22,7 +22,7 @@ pub fn render_animation_frame(
     buffer: &mut CommandBuffer,
     #[resource] game_timer: &GameTimer,
 ) {
-    println!("animating {:?}", entity_id);
+    //println!("animating {:?}", entity_id);
     if let Some(frame) = animation.get_frame(game_timer.total_game_time()) {
         let frame_texture = animation.get_frame_texture(frame);
         if texture.0 == frame_texture {

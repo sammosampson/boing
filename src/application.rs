@@ -93,7 +93,9 @@ fn build_resources(event_loop: &SystemEventLoop) -> Result<Resources, Applicatio
     let game_state = create_game_state();
     let system_event_producer = create_system_event_producer();
     let system_event_channel = create_system_event_channel();
+    let audio = create_audio();
     let sound_cache = create_sound_cache();
+    let music_cache = create_music_cache();
         
     let mut resources = Resources::default();
     &mut resources.insert(game_style);
@@ -105,6 +107,8 @@ fn build_resources(event_loop: &SystemEventLoop) -> Result<Resources, Applicatio
     &mut resources.insert(system_event_producer);
     &mut resources.insert(system_event_channel);
     &mut resources.insert(sound_cache);
+    &mut resources.insert(music_cache);
+    &mut resources.insert(audio);
     &mut resources.insert(game_state);
     Ok(resources)
 }
@@ -130,4 +134,10 @@ fn create_sound_cache() -> SoundSourceCache {
     let mut sounds = SoundSourceCache::default();
     initialise_sound_cache(&mut sounds);
     sounds
+}
+
+fn create_music_cache() -> MusicSourceCache {
+    let mut music = MusicSourceCache::default();
+    initialise_music_cache(&mut music);
+    music
 }

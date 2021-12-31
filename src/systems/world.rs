@@ -9,10 +9,10 @@ pub fn remove_entity(
     buffer: &mut CommandBuffer,
 ) {
     if renderer.contains(id) {
-        println!("remove from render {:?}", id);
+        //println!("remove from render {:?}", id);
         renderer.remove_item_to_render(id);
     }
 
-    println!("remove entity {:?}", id);
+    //println!("remove entity {:?}", id);
     buffer.remove(*entity);
 }   

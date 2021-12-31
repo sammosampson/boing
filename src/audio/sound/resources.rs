@@ -14,29 +14,17 @@ pub enum SoundResources {
     Down
 }
 
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Source {
-    pub bytes: Vec<u8>,
-}
-
-impl AsRef<[u8]> for Source {
-    fn as_ref(&self) -> &[u8] {
-        &self.bytes
-    }
-}
-
 #[derive(Default)]
 pub struct SoundSourceCache {
-    inner: HashMap<SoundResources, Source>
+    inner: HashMap<SoundResources, RawSoundSource>
 }
 
 impl SoundSourceCache {
     fn insert(&mut self, resource: SoundResources, data: &[u8]) {
-        self.inner.insert(resource, Source { bytes: data.to_vec() });
+        self.inner.insert(resource, RawSoundSource { bytes: data.to_vec() });
     }
 
-    pub fn get(&self, resource: &SoundResources) -> Option<&Source> {
+    pub fn get(&self, resource: &SoundResources) -> Option<&RawSoundSource> {
         self.inner.get(resource)
     }
 }

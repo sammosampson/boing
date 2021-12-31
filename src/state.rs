@@ -41,7 +41,7 @@ impl GameState {
         self.previous_status = self.status;
         self.status = to;
         self.entered_on = None;
-        println!("transitioning to state {:?} from {:?} ", to, self.previous_status);
+        //println!("transitioning to state {:?} from {:?} ", to, self.previous_status);
     }
 
     pub fn has_entered(&self) -> bool {
@@ -49,7 +49,7 @@ impl GameState {
     }
 
     pub fn enter(&mut self, time: f32) {
-        println!("entering state at {:?}", time);
+        //println!("entering state at {:?}", time);
         self.entered_on = Some(time);
     }
 
